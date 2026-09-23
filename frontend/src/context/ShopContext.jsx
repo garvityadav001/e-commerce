@@ -1,7 +1,7 @@
-import { createContext, useDebugValue, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {products as localProducts} from "../assets/assets";
 import { toast } from 'react-toastify';
-export const ShopContext = createContext();
+import { ShopContext } from './ShopContextValue';
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
 
@@ -87,7 +87,7 @@ const ShopContextProvider = (props)=>{
     }
 
 
-    const getProductData = async()=>{
+    const getProductData = useCallback(async()=>{
         try{
             const response = await axios.get(backendUrl + '/api/product/list');
             const apiProducts = response.data.success && Array.isArray(response.data.products)
@@ -105,9 +105,9 @@ const ShopContextProvider = (props)=>{
             console.error('Unable to load products from the API:', error.message);
             setProducts(localProducts);
         }
-    }
+    }, [backendUrl]);
 
-    const getUserCart = async (token)=>{
+    const getUserCart = useCallback(async (token)=>{
         try{
             const response = await axios.post(backendUrl + '/api/cart/get', {}, {headers: {token}});
             if(response.data.success){
@@ -117,9 +117,9 @@ const ShopContextProvider = (props)=>{
             console.log(error);
             toast.error(error.message)
         }
-    }
+    }, [backendUrl]);
 
-    const getUserProfile = async (userToken)=>{
+    const getUserProfile = useCallback(async (userToken)=>{
         try{
             const payload = JSON.parse(atob(userToken.split('.')[1]));
             setUser({
@@ -127,7 +127,7 @@ const ShopContextProvider = (props)=>{
                 name: 'My Profile',
                 email: 'Email unavailable'
             });
-        }catch(error){
+        }catch{
             setUser({name: 'My Profile', email: 'Profile unavailable'});
         }
         try{
@@ -142,10 +142,10 @@ const ShopContextProvider = (props)=>{
                 email: currentUser.email
             } : {name: 'My Profile', email: 'Email unavailable'});
         }
-    }
+    }, [backendUrl]);
     useEffect(()=>{
         getProductData()
-    },[])
+    }, [getProductData])
 
     useEffect(()=>{
         if(!token && localStorage.getItem('token')){
@@ -154,7 +154,7 @@ const ShopContextProvider = (props)=>{
             getUserCart(savedToken)
             getUserProfile(savedToken)
         }
-    },[])
+    },[token, getUserCart, getUserProfile])
 
     const value = {
         products, currency, delivery_fee,

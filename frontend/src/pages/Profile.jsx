@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { ShopContext } from '../context/ShopContext'
+import { ShopContext } from '../context/ShopContextValue'
 
 const Profile = () => {
   const { token, user, navigate } = useContext(ShopContext)

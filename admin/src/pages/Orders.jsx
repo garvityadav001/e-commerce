@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react'
 import axios from 'axios'
-import { backendUrl, currency } from '../App';
+import { backendUrl, currency } from '../config';
 import { toast } from 'react-toastify'
 import { assets } from '../assets/assets';
 
@@ -10,7 +10,7 @@ import { assets } from '../assets/assets';
 const Orders = ({ token }) => {
   const [orders, setOrders] = useState([]);
 
-  const fetchAllOrders = async () => {
+  const fetchAllOrders = useCallback(async () => {
     if (!token) return null
     try {
       const response = await axios.post(backendUrl + '/api/order/list', {}, { headers: { token } });
@@ -23,7 +23,7 @@ const Orders = ({ token }) => {
       toast.error(error.message)
 
     }
-  }
+  }, [token]);
 
   const statusHandler = async(event,orderId)=>{
     // if(!token) return null;
@@ -35,13 +35,13 @@ const Orders = ({ token }) => {
       }
     }catch(error){
       console.log(error)
-      toast.error(response.data.message)
+      toast.error(error.message)
     }
   }
 
   useEffect(() => {
     fetchAllOrders()
-  }, [token])
+  }, [fetchAllOrders])
 
   return (
     <div>

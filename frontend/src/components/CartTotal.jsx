@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import Title from './Title';
-import { ShopContext } from '../context/ShopContext';
+import { ShopContext } from '../context/ShopContextValue';
 
 const CartTotal = () => {
   const {currency, delivery_fee, getCartAmount } = useContext(ShopContext);

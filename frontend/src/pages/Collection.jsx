@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useContext, useState } from 'react';
-import { ShopContext } from '../context/ShopContext';
+import { ShopContext } from '../context/ShopContextValue';
 import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
@@ -29,7 +29,7 @@ const Collection = () => {
     }
   };
   
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let productCopy = products.slice();
 
     if(showSearch && search ){
@@ -43,9 +43,9 @@ const Collection = () => {
       productCopy = productCopy.filter((item)=> subCategory.includes(item.subCategory));
     }
     setFilteredProducts(productCopy);
-  }
+  }, [products, showSearch, search, category, subCategory]);
 
-  const sortProducts = ()=>{
+  const sortProducts = useCallback(()=>{
     let sortedProducts = filteredProducts.slice();
     switch(sortType){
       case 'low-high': {
@@ -61,15 +61,15 @@ const Collection = () => {
         break;
       }
     }
-  }
+  }, [filteredProducts, sortType, applyFilters]);
 
   useEffect(() => {
     applyFilters();
-  }, [category, subCategory, search, showSearch, products]);
+  }, [applyFilters]);
 
   useEffect(()=>{
     sortProducts();
-  },[sortType])
+  },[sortProducts])
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t border-gray-300'>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import {backendUrl, currency} from '../App'
+import {backendUrl, currency} from '../config'
 import axios from 'axios'
 import {toast} from 'react-toastify'
 
@@ -32,7 +32,7 @@ const List = ({token}) => {
         toast.error(response.data.message)
       }
     }catch(error){
-
+      toast.error(error.message);
     }
   }
 
@@ -57,7 +57,7 @@ const List = ({token}) => {
 
         {/* Product List  */}
         {
-          list.map((item,index)=>(
+          list.map((item)=>(
             <div key={item._id} className='grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border text-sm'>
               <img className='w-12 ' src={item?.image?.[0] || '/placeholder.png'} alt='product_img' />
               <p>{item.name}</p>

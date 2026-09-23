@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ShopContext } from '../context/ShopContext';
+import { ShopContext } from '../context/ShopContextValue';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
 
@@ -11,18 +11,18 @@ const Product = () => {
   const [image, setImage] = useState("");
   const [size, setSize] = useState('');
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     if (productId && products.length > 0) {
       const foundProduct = products.find((item) => item._id === productId);
       setProductData(foundProduct);
       setImage(foundProduct.image[0]);
       return null;
     }
-  }
+  }, [productId, products]);
 
   useEffect(() => {
     fetchData();
-  }, [productId, products])
+  }, [fetchData])
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
       {/* ---------------Product Data--------------- */}

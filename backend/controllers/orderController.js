@@ -123,6 +123,9 @@ const verifyStripe = async () => {
 // placing orders using Razorpay method
 const placeOrderRazorpay = async (req, res) => {
     try {
+        if (!razorpayInstance) {
+            return res.json({ success: false, message: 'Razorpay is not configured on the server' });
+        }
         const { userId, items, amount, address } = req.body;
         const orderData = {
             userId,

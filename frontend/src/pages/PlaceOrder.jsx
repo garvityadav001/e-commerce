@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
 import { assets } from '../assets/assets'
-import { ShopContext } from '../context/ShopContext'
+import { ShopContext } from '../context/ShopContextValue'
 import axios from 'axios'
 import {toast} from 'react-toastify'
 
@@ -31,8 +31,13 @@ const PlaceOrder = () => {
   }
 
   const initPay = (order)=>{
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
+    if(!razorpayKey){
+      toast.error('Razorpay is not configured. Add VITE_RAZORPAY_KEY_ID.');
+      return;
+    }
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      key: razorpayKey,
       amount: order.amount,
       currency: order.currency,
       name: 'Order Payment',
@@ -86,7 +91,6 @@ const PlaceOrder = () => {
             setCartItems({});
             navigate('/orders');
           }else{
-            console.log(error)
             toast.error(response.data.message);
           }
           break;
@@ -107,6 +111,8 @@ const PlaceOrder = () => {
           const responseRazorpay = await axios.post(backendUrl+'/api/order/razorpay', orderData, {headers:{token}})
           if(responseRazorpay.data.success){
             initPay(responseRazorpay.data.order);
+          }else{
+            toast.error(responseRazorpay.data.message || 'Unable to start Razorpay payment');
           }
           
           break;
