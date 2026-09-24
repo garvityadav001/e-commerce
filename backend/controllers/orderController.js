@@ -50,7 +50,7 @@ const placeOrder = async (req, res) => {
 // placing orders using stripe method
 const placeOrderStripe = async (req, res) => {
     try {
-        const { userId, items, amount, address } = req.body;
+        const { userId, items, amount, address, discountPercent = 0 } = req.body;
         const { origin } = req.headers;
         const orderData = {
             userId,
@@ -70,7 +70,7 @@ const placeOrderStripe = async (req, res) => {
                 product_data: {
                     name: item.name
                 },
-                unit_amount: item.price * 100
+                unit_amount: Math.round(item.price * 100 * (1 - discountPercent / 100))
             },
             quantity: item.quantity
         }))

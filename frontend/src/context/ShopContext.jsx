@@ -16,6 +16,14 @@ const ShopContextProvider = (props)=>{
     const navigate = useNavigate();
     const [token, setToken] = useState('');
     const [user, setUser] = useState(null);
+    const [newsletterSubscribed, setNewsletterSubscribed] = useState(
+        () => Boolean(localStorage.getItem('newsletterEmail'))
+    );
+
+    const subscribeNewsletter = (email) => {
+        localStorage.setItem('newsletterEmail', email);
+        setNewsletterSubscribed(true);
+    };
 
     const addToCart = async (itemId, size)=>{
         if(!size){
@@ -85,6 +93,8 @@ const ShopContextProvider = (props)=>{
         }
         return totalAmount;
     }
+
+    const getNewsletterDiscount = () => newsletterSubscribed ? getCartAmount() * 0.2 : 0;
 
 
     const getProductData = useCallback(async()=>{
@@ -161,7 +171,8 @@ const ShopContextProvider = (props)=>{
         search, setSearch, showSearch, setShowSearch,
         cartItems, addToCart, setCartItems,
         getCartCount, updateQuantity,
-        getCartAmount, navigate, backendUrl,
+        getCartAmount, getNewsletterDiscount, navigate, backendUrl,
+        newsletterSubscribed, subscribeNewsletter,
         setToken, token, user, setUser, getUserProfile
     };
 
