@@ -1,7 +1,6 @@
 import React from 'react'
 import Title from '../components/Title'
 import { assets } from '../assets/assets'
-import NewsLetter from '../components/NewsLetter'
 const About = () => {
   return (
     <div>
@@ -38,8 +37,6 @@ const About = () => {
           <p className='text-gray-600'>Our team of dedicated professionals is here to assist you every step of the way, ensuring your satisfaction remains our top priority.</p>
         </div>
       </div>
-
-      <NewsLetter/>
     </div>
   )
 }

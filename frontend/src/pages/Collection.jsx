@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useContext, useState } from 'react';
 import { ShopContext } from '../context/ShopContextValue';
 import { assets } from '../assets/assets';
@@ -29,7 +29,7 @@ const Collection = () => {
     }
   };
   
-  const applyFilters = useCallback(() => {
+  useEffect(() => {
     let productCopy = products.slice();
 
     if(showSearch && search ){
@@ -42,34 +42,14 @@ const Collection = () => {
     if (subCategory.length > 0) {
       productCopy = productCopy.filter((item)=> subCategory.includes(item.subCategory));
     }
-    setFilteredProducts(productCopy);
-  }, [products, showSearch, search, category, subCategory]);
-
-  const sortProducts = useCallback(()=>{
-    let sortedProducts = filteredProducts.slice();
-    switch(sortType){
-      case 'low-high': {
-        setFilteredProducts(sortedProducts.sort((a,b)=> a.price-b.price));
-        break;
-      }
-      case 'high-low' :{
-        setFilteredProducts(sortedProducts.sort((a,b)=> (b.price-a.price)));
-        break;
-      }
-      default: {
-        applyFilters();
-        break;
-      }
+    if (sortType === 'low-high') {
+      productCopy.sort((a, b) => a.price - b.price);
+    } else if (sortType === 'high-low') {
+      productCopy.sort((a, b) => b.price - a.price);
     }
-  }, [filteredProducts, sortType, applyFilters]);
 
-  useEffect(() => {
-    applyFilters();
-  }, [applyFilters]);
-
-  useEffect(()=>{
-    sortProducts();
-  },[sortProducts])
+    setFilteredProducts(productCopy);
+  }, [products, showSearch, search, category, subCategory, sortType]);
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t border-gray-300'>

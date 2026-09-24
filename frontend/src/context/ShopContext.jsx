@@ -12,18 +12,10 @@ const ShopContextProvider = (props)=>{
     const [search, setSearch] = useState("");
     const [showSearch, setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState({});
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState(localProducts);
     const navigate = useNavigate();
     const [token, setToken] = useState('');
     const [user, setUser] = useState(null);
-    const [newsletterSubscribed, setNewsletterSubscribed] = useState(
-        () => Boolean(localStorage.getItem('newsletterEmail'))
-    );
-
-    const subscribeNewsletter = (email) => {
-        localStorage.setItem('newsletterEmail', email);
-        setNewsletterSubscribed(true);
-    };
 
     const addToCart = async (itemId, size)=>{
         if(!size){
@@ -94,10 +86,10 @@ const ShopContextProvider = (props)=>{
         return totalAmount;
     }
 
-    const getNewsletterDiscount = () => newsletterSubscribed ? getCartAmount() * 0.2 : 0;
 
 
     const getProductData = useCallback(async()=>{
+        setProducts(localProducts);
         try{
             const response = await axios.get(backendUrl + '/api/product/list');
             const apiProducts = response.data.success && Array.isArray(response.data.products)
@@ -171,8 +163,7 @@ const ShopContextProvider = (props)=>{
         search, setSearch, showSearch, setShowSearch,
         cartItems, addToCart, setCartItems,
         getCartCount, updateQuantity,
-        getCartAmount, getNewsletterDiscount, navigate, backendUrl,
-        newsletterSubscribed, subscribeNewsletter,
+        getCartAmount, navigate, backendUrl,
         setToken, token, user, setUser, getUserProfile
     };
 

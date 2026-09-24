@@ -9,6 +9,17 @@ a.active hr{
     font-family: Outfit;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
 .prata-regular {
   font-family: "Prata", serif;
   font-weight: 400;
